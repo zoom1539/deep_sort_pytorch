@@ -25,7 +25,7 @@ class Tracker(object):
             cv2.namedWindow("test", cv2.WINDOW_NORMAL)
             cv2.resizeWindow("test", args.display_width, args.display_height)
 
-        self.vdo = cv2.VideoCapture()
+        self.video = cv2.VideoCapture()
         self.detector = build_detector(cfg, use_cuda=use_cuda)
         self.deepsort = build_tracker(cfg, use_cuda=use_cuda)
         self.class_names = self.detector.class_names
@@ -33,15 +33,15 @@ class Tracker(object):
 
     def __enter__(self):
         assert os.path.isfile(self.args.video_path), "Error: path error"
-        self.vdo.open(self.args.video_path)
-        self.im_width = int(self.vdo.get(cv2.CAP_PROP_FRAME_WIDTH))
-        self.im_height = int(self.vdo.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        self.video.open(self.args.video_path)
+        self.im_width = int(self.video.get(cv2.CAP_PROP_FRAME_WIDTH))
+        self.im_height = int(self.video.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
         if self.args.save_path:
             fourcc =  cv2.VideoWriter_fourcc(*'MJPG')
             self.writer = cv2.VideoWriter(self.args.save_path, fourcc, 20, (self.im_width,self.im_height))
 
-        assert self.vdo.isOpened()
+        assert self.video.isOpened()
         return self
 
     
@@ -85,13 +85,13 @@ class Tracker(object):
             identity_stack[id] = []
 
         idx_frame = 0
-        while self.vdo.grab(): 
+        while self.video.grab(): 
             idx_frame += 1
             if idx_frame % self.args.frame_interval:
                 continue
 
             start = time.time()
-            _, ori_im = self.vdo.retrieve()
+            _, ori_im = self.video.retrieve()
             im = cv2.cvtColor(ori_im, cv2.COLOR_BGR2RGB)
 
             # do detection
@@ -134,13 +134,13 @@ class Tracker(object):
     def run(self):
 
         idx_frame = 0
-        while self.vdo.grab(): 
+        while self.video.grab(): 
             idx_frame += 1
             if idx_frame % self.args.frame_interval:
                 continue
 
             start = time.time()
-            _, ori_im = self.vdo.retrieve()
+            _, ori_im = self.video.retrieve()
             im = cv2.cvtColor(ori_im, cv2.COLOR_BGR2RGB)
 
             # do detection
