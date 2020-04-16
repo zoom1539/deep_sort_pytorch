@@ -12,7 +12,7 @@ from utils.draw import draw_boxes
 from utils.parser import get_config
 from tqdm import tqdm
 
-
+ 
 class Tracker(object):
     def __init__(self, cfg, args):
         self.cfg = cfg
@@ -39,7 +39,8 @@ class Tracker(object):
 
         if self.args.save_path:
             fourcc =  cv2.VideoWriter_fourcc(*'MJPG')
-            self.writer = cv2.VideoWriter(self.args.save_path, fourcc, 20, (self.im_width,self.im_height))
+            fps = self.video.get(cv2.CAP_PROP_FPS)
+            self.writer = cv2.VideoWriter(self.args.save_path, fourcc, fps, (self.im_width,self.im_height))
 
         assert self.video.isOpened()
         return self
@@ -179,12 +180,12 @@ def parse_args(video_path):
     parser.add_argument("--video_path", type=str, default = video_path)
     parser.add_argument("--config_detection", type=str, default="./configs/yolov3.yaml")
     parser.add_argument("--config_deepsort", type=str, default="./configs/deep_sort.yaml")
-    parser.add_argument("--ignore_display", dest="display", action="store_false", default=True)
+    parser.add_argument("--ignore_display", dest="display", action="store_false", default=False)
     parser.add_argument("--frame_interval", type=int, default=1)
     parser.add_argument("--display_width", type=int, default=800)
     parser.add_argument("--display_height", type=int, default=600)
     parser.add_argument("--save_path", type=str, default="./demo/demo.avi")
-    parser.add_argument("--save_dir", type=str, default="/media/ubuntu/share/smoking_dataset/dataset_no_smoking_snippet/")
+    parser.add_argument("--save_dir", type=str, default="/data1/dataset/smoking/dataset_annotation")
     parser.add_argument("--cpu", dest="use_cuda", action="store_false", default=True)
     return parser.parse_args()
 
@@ -199,7 +200,7 @@ def listdir(dir, list_name):
 
 
 if __name__=="__main__":
-    work_dir = '/media/ubuntu/share/smoking_dataset/dataset_annotation/5/'
+    work_dir = '/data1/dataset/smoking/dataset_annotation/1/'
     list_path = []
     listdir(work_dir, list_path)
 
