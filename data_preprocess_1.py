@@ -182,12 +182,22 @@ class Tracker(object):
                 bbox_xywh_person = bboxes_xywh[mask]
                 cls_conf_person = cls_confs[mask]
                 
-                track_outputs = self.deepsort.update(bboxes_xywh, cls_confs, img_rgb)
+                track_outputs = self.deepsort.update(bbox_xywh_person, cls_conf_person, img_rgb)
                 if len(track_outputs) > 0:
                     bboxes_xyxy = track_outputs[:,:4]
                     track_ids = track_outputs[:,-1]
 
                     self.stack_track(frame_id, track_ids, bboxes_xyxy, img_bgr, track_dict)
+            
+                    # TODO
+                    # for bbox_xyxy in bboxes_xyxy:
+                    #     cv2.rectangle(img_bgr,
+                    #                 (bbox_xyxy[0], bbox_xyxy[1]),
+                    #                 (bbox_xyxy[2], bbox_xyxy[3]),
+                    #                 [0,0,255],3)
+                
+                    # cv2.imshow('img', img_bgr)
+                    # cv2.waitKey()
         
         print('stack_track done')
         self.generate_snippet(track_dict)
@@ -197,8 +207,8 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--config_detection", type=str, default="./configs/yolov3.yaml")
     parser.add_argument("--config_deepsort", type=str, default="./configs/deep_sort.yaml")
-    parser.add_argument("--dataset_dir", type=str, default = '/data1/dataset/smoking/dataset_annotation')
-    parser.add_argument("--work_dir", type=str, default="/data1/dataset/smoking/dataset_annotation_work_dir")
+    parser.add_argument("--dataset_dir", type=str, default = '/media/ubuntu/share/smoking_dataset/dataset_annotation')
+    parser.add_argument("--work_dir", type=str, default="/media/ubuntu/share/smoking_dataset/dataset_annotation_work_dir")
     parser.add_argument("--cpu", dest="use_cuda", action="store_false", default=True)
     return parser.parse_args()
 
@@ -223,7 +233,7 @@ if __name__=="__main__":
 
         # TODO
         # print(video_path)
-        video_path = '/data1/dataset/smoking/dataset_annotation/36/20190820T142621Z_20190820T142700Z_20191217_154014.avi'
+        video_path = '/media/ubuntu/share/smoking_dataset/dataset_annotation/36/20190820T142621Z_20190820T142700Z_20191217_154014.avi'
         with Tracker(cfg, args, video_path) as trk:
             trk.run()
         
