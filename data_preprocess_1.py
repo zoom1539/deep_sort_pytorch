@@ -58,17 +58,17 @@ class Tracker(object):
             track_dict[track_id].append((img_bbox, bbox_xyxy, frame_id))
 
     def parse_annotation(self):
-        annotation_path = self.vedio_path.replace('avi','xml')
+        annotation_path = self.video_path.replace('avi','xml')
         annotation_tree = ET.ElementTree(file = annotation_path)
 
         annotation = dict()
         for track in annotation_tree.iter(tag='track'):
             for box in track:
                 frame_id = int(box.attrib['frame'])
-                xtl = int(box.attrib['xtl'])
-                ytl = int(box.attrib['ytl'])
-                xbr = int(box.attrib['xbr'])
-                ybr = int(box.attrib['ybr'])
+                xtl = int(float(box.attrib['xtl']))
+                ytl = int(float(box.attrib['ytl']))
+                xbr = int(float(box.attrib['xbr']))
+                ybr = int(float(box.attrib['ybr']))
                 bbox_center = ((xtl + xbr) * 0.5, (ytl + ybr) * 0.5)
 
                 if frame_id not in list(annotation.keys()):
@@ -113,19 +113,19 @@ class Tracker(object):
         return 0 # not smoking
 
     def save_snippets(self, snippets, resolution):
-        dir_name_id = self.vedio_path.split('/')[-2]
-        dir_name_video = self.vedio_path.split('/')[-1].split('.')[0]
-        dir_video = os.path.join(self.work_dir, dir_name_id, dir_name_video)
+        dir_name_id = self.video_path.split('/')[-2]
+        dir_name_video = self.video_path.split('/')[-1].split('.')[0]
+        dir_video = os.path.join(self.args.work_dir, dir_name_id, dir_name_video)
         is_exist = os.path.exists(dir_video)
         if not is_exist:                   
             os.makedirs(dir_video)
         
-        save_path_vedio = os.path.join(dir_video, str(self.snippet_id), '.avi')
-        save_path_label = os.path.join(dir_video, str(self.snippet_id), '.json')
+        save_path_video = os.path.join(dir_video, str(self.snippet_id) + '.avi')
+        save_path_label = os.path.join(dir_video, str(self.snippet_id) + '.json')
           
         for key, snippet in snippets.items():
             if len(snippet) >= 10:
-                videoWriter = cv2.VideoWriter(save_path_vedio, self.fourcc, self.fps, resolution)
+                videoWriter = cv2.VideoWriter(save_path_video, self.fourcc, self.fps, resolution)
                 labels = list()
                 
                 for frame, label in snippet:
@@ -171,6 +171,8 @@ class Tracker(object):
         frame_id = -1
         while self.video.grab():
             frame_id += 1
+            print('frame_id: ',frame_id)
+
             _, img_bgr = self.video.retrieve()
             img_rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
 
@@ -187,6 +189,7 @@ class Tracker(object):
 
                     self.stack_track(frame_id, track_ids, bboxes_xyxy, img_bgr, track_dict)
         
+        print('stack_track done')
         self.generate_snippet(track_dict)
 
 
@@ -218,5 +221,11 @@ if __name__=="__main__":
         cfg.merge_from_file(args.config_detection)
         cfg.merge_from_file(args.config_deepsort)
 
+        # TODO
+        # print(video_path)
+        video_path = '/data1/dataset/smoking/dataset_annotation/36/20190820T142621Z_20190820T142700Z_20191217_154014.avi'
         with Tracker(cfg, args, video_path) as trk:
             trk.run()
+        
+        # TODO
+        break
