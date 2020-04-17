@@ -171,7 +171,7 @@ class Tracker(object):
         frame_id = -1
         while self.video.grab():
             frame_id += 1
-            print('frame_id: ',frame_id)
+            # print('frame_id: ',frame_id)
 
             _, img_bgr = self.video.retrieve()
             img_rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
@@ -189,7 +189,7 @@ class Tracker(object):
 
                     self.stack_track(frame_id, track_ids, bboxes_xyxy, img_bgr, track_dict)
             
-        print('stack_track done')
+        # print('stack_track done')
         self.generate_snippet(track_dict)
 
 
