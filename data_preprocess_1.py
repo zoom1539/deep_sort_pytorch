@@ -189,16 +189,6 @@ class Tracker(object):
 
                     self.stack_track(frame_id, track_ids, bboxes_xyxy, img_bgr, track_dict)
             
-                    # TODO
-                    # for bbox_xyxy in bboxes_xyxy:
-                    #     cv2.rectangle(img_bgr,
-                    #                 (bbox_xyxy[0], bbox_xyxy[1]),
-                    #                 (bbox_xyxy[2], bbox_xyxy[3]),
-                    #                 [0,0,255],3)
-                
-                    # cv2.imshow('img', img_bgr)
-                    # cv2.waitKey()
-        
         print('stack_track done')
         self.generate_snippet(track_dict)
 
@@ -231,11 +221,5 @@ if __name__=="__main__":
         cfg.merge_from_file(args.config_detection)
         cfg.merge_from_file(args.config_deepsort)
 
-        # TODO gg
-        # print(video_path)   
-        video_path = '/media/ubuntu/share/smoking_dataset/dataset_annotation/36/20190820T142621Z_20190820T142700Z_20191217_154014.avi'
         with Tracker(cfg, args, video_path) as trk:
             trk.run()
-        
-        # TODO
-        # break
