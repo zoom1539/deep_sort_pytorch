@@ -233,7 +233,7 @@ if __name__=="__main__":
 
         # TODO 
         # print(video_path)   
-        # video_path = '/media/ubuntu/share/smoking_dataset/dataset_annotation/36/20190820T142621Z_20190820T142700Z_20191217_154014.avi'
+        video_path = '/media/ubuntu/share/smoking_dataset/dataset_annotation/36/20190820T142621Z_20190820T142700Z_20191217_154014.avi'
         with Tracker(cfg, args, video_path) as trk:
             trk.run()
         
