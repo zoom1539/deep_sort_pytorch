@@ -207,8 +207,8 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--config_detection", type=str, default="./configs/yolov3.yaml")
     parser.add_argument("--config_deepsort", type=str, default="./configs/deep_sort.yaml")
-    parser.add_argument("--dataset_dir", type=str, default = '/media/ubuntu/share/smoking_dataset/dataset_annotation')
-    parser.add_argument("--work_dir", type=str, default="/media/ubuntu/share/smoking_dataset/dataset_annotation_work_dir")
+    parser.add_argument("--dataset_dir", type=str, default = '/data1/dataset/smoking/dataset_annotation')
+    parser.add_argument("--work_dir", type=str, default="/data1/dataset/smoking/dataset_annotation_work_dir")
     parser.add_argument("--cpu", dest="use_cuda", action="store_false", default=True)
     return parser.parse_args()
 
@@ -232,10 +232,10 @@ if __name__=="__main__":
         cfg.merge_from_file(args.config_deepsort)
 
         # TODO
-        print(video_path) 
-        video_path = '/media/ubuntu/share/smoking_dataset/dataset_annotation/36/20190820T142621Z_20190820T142700Z_20191217_154014.avi'
+        # print(video_path) 
+        # video_path = '/media/ubuntu/share/smoking_dataset/dataset_annotation/36/20190820T142621Z_20190820T142700Z_20191217_154014.avi'
         with Tracker(cfg, args, video_path) as trk:
             trk.run()
         
         # TODO
-        break
+        # break
