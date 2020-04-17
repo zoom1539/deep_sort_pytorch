@@ -105,7 +105,7 @@ class Tracker(object):
         if frame_id in list(annotation.keys()):
             bbox_centers = annotation[frame_id]
             center = ((bbox_xyxy[0] + bbox_xyxy[2]) * 0.5, (bbox_xyxy[1] + bbox_xyxy[3]) * 0.5)
-            closed_thres = ((bbox_xyxy[2] - bbox_xyxy[1]) * 0.1, (bbox_xyxy[3] - bbox_xyxy[1]) * 0.1)
+            closed_thres = ((bbox_xyxy[2] - bbox_xyxy[0]) * 0.3, (bbox_xyxy[3] - bbox_xyxy[1]) * 0.3)
             for bbox_center in bbox_centers:
                 if self.is_closed(center, bbox_center, closed_thres):
                     return 1 # smoking
@@ -119,12 +119,12 @@ class Tracker(object):
         is_exist = os.path.exists(dir_video)
         if not is_exist:                   
             os.makedirs(dir_video)
-        
-        save_path_video = os.path.join(dir_video, str(self.snippet_id) + '.avi')
-        save_path_label = os.path.join(dir_video, str(self.snippet_id) + '.json')
           
         for key, snippet in snippets.items():
             if len(snippet) >= 10:
+                save_path_video = os.path.join(dir_video, str(self.snippet_id) + '.avi')
+                save_path_label = os.path.join(dir_video, str(self.snippet_id) + '.json')
+                
                 videoWriter = cv2.VideoWriter(save_path_video, self.fourcc, self.fps, resolution)
                 labels = list()
                 
@@ -231,8 +231,8 @@ if __name__=="__main__":
         cfg.merge_from_file(args.config_detection)
         cfg.merge_from_file(args.config_deepsort)
 
-        # TODO
-        # print(video_path) 
+        # TODO 
+        # print(video_path)  
         # video_path = '/media/ubuntu/share/smoking_dataset/dataset_annotation/36/20190820T142621Z_20190820T142700Z_20191217_154014.avi'
         with Tracker(cfg, args, video_path) as trk:
             trk.run()
