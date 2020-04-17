@@ -231,7 +231,7 @@ if __name__=="__main__":
         cfg.merge_from_file(args.config_detection)
         cfg.merge_from_file(args.config_deepsort)
 
-        # TODO  TODO
+        # TODO  gg 
         # print(video_path)   
         video_path = '/media/ubuntu/share/smoking_dataset/dataset_annotation/36/20190820T142621Z_20190820T142700Z_20191217_154014.avi'
         with Tracker(cfg, args, video_path) as trk:
