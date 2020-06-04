@@ -130,7 +130,7 @@ class Tracker(object):
                 
                 for frame, bbox_xyxy, label in snippet:
                     videoWriter.write(frame)
-                    labels.append((bbox_xyxy, label))
+                    labels.append((bbox_xyxy.tolist(), label))
 
                 videoWriter.release()
                 with open(save_path_label, 'w') as json_writer:
