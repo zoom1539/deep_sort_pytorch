@@ -128,9 +128,9 @@ class Tracker(object):
                 videoWriter = cv2.VideoWriter(save_path_video, self.fourcc, self.fps, resolution)
                 labels = list()
                 
-                for frame, label in snippet:
+                for frame, bbox_xyxy, label in snippet:
                     videoWriter.write(frame)
-                    labels.append(label)
+                    labels.append((bbox_xyxy, label))
 
                 videoWriter.release()
                 with open(save_path_label, 'w') as json_writer:
@@ -159,7 +159,7 @@ class Tracker(object):
                 frame = self.uniform_img_bbox(max_width, max_height, img_bbox)
                 label = self.find_label(annotation, bbox_xyxy, frame_id)
 
-                snippets[key].append((frame, label))
+                snippets[key].append((frame, bbox_xyxy, label))
 
                 frame_id_previous = frame_id
             
